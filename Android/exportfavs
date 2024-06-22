@@ -1,0 +1,36 @@
+#!/bin/bash
+
+distro=debian
+kernel=$(uname -r | cut -d'-' -f1)
+
+cat <<EOF > $PREFIX/var/lib/lms/exportfavs
+#!/bin/bash
+echo "=============================================="
+echo "Export your LMS favorites. This option will"
+echo "replace any existing favorites.opml in your"
+echo "phone's Download folder"
+echo ""
+echo "Press y to continue or n to exit"
+echo "=============================================="
+read -r -n 1 response
+case "\$response" in
+    [yY])
+        echo
+        echo "exporting..."
+	if [ ! -e /var/lib/squeezeboxserver/prefs/favorites.opml ]; then
+		echo "Cannot find favorites.opml, Press enter to quit this terminal"
+	else
+		cp /var/lib/squeezeboxserver/prefs/favorites.opml storage/downloads/favorites.opml
+		echo "Favorites exported. Press enter to quit this terminal."
+	fi
+        ;;
+    *)
+        echo
+	echo "Cancelled. Press enter to quit this terminal"
+        ;;
+esac
+read 
+EOF
+
+echo "proot-distro login --kernel $kernel --bind $PREFIX/var/lib/lms:/root --bind ~/storage:/root/storage $distro -- bash exportfavs" > ~/.shortcuts/"Export favorites.opml"
+chmod +x ~/.shortcuts/"Export favorites.opml"
