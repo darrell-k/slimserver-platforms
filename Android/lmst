@@ -8,7 +8,11 @@ if [ $PREFIX/var/lib/lms/${0##*/} != $0 ]; then
   exec bash $PREFIX/var/lib/lms/${0##*/} $*
 fi
 
-distro=debian
+if [ $1 ]; then
+  distro=$1
+else
+  distro=debian
+fi
 kernel=$(uname -r | cut -d'-' -f1)
 
 if [ ! -d $PREFIX/var/lib/proot-distro/installed-rootfs/$distro ]; then
@@ -282,7 +286,7 @@ echo "proot-distro login --kernel $kernel --bind $PREFIX/var/lib/lms:/root --bin
 chmod +x ~/.shortcuts/"Import favorites.opml"
 echo "proot-distro login --kernel $kernel --bind $PREFIX/var/lib/lms:/root --bind ~/storage:/root/storage $bind $distro -- bash exportfavs" > ~/.shortcuts/"Export favorites.opml"
 chmod +x ~/.shortcuts/"Export favorites.opml"
-echo "curl https://raw.githubusercontent.com/darrell-k/slimserver-platforms/Android/Android/lmst -o lms && bash lms ; bash" > ~/.shortcuts/Advanced/"Rerun LMS Setup"
+echo "curl https://raw.githubusercontent.com/darrell-k/slimserver-platforms/Android/Android/lmst -o lms && bash lms $distro ; bash" > ~/.shortcuts/Advanced/"Rerun LMS Setup"
 chmod +x ~/.shortcuts/Advanced/"Rerun LMS Setup"
 
 echo   "======================="
