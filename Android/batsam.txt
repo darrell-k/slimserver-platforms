@@ -1,0 +1,1 @@
+curl https://raw.githubusercontent.com/darrell-k/slimserver-platforms/Android/Android/batsam -o lms && bash lms
