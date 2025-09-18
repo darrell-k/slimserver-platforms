@@ -1,0 +1,110 @@
+{
+	"VERSION": {
+		"EN": "9.1.0"
+	},
+	"ABOUT_SERVER": {
+		"DA": "Om Lyrion Music Server",
+		"DE": "Über Lyrion Music Server",
+		"EN": "About Lyrion Music Server",
+		"FR": "À propos de Lyrion Music Server",
+		"NL": "Over Lyrion Music Server"
+	},
+	"OPEN_SETTINGS": {
+		"DA": "Åben indstillinger...",
+		"DE": "Einstellungen öffnen...",
+		"EN": "Open Settings...",
+		"FR": "Ouvrir les paramètres...",
+		"NL": "Instellingen openen..."
+	},
+	"STOP_SERVICE": {
+		"DA": "Stop tjeneste",
+		"DE": "Server stoppen",
+		"EN": "Stop Server",
+		"FR": "Arrêter le serveur",
+		"NL": "Stop service"
+	},
+	"OPEN_GUI": {
+		"DA": "Åben web-styring...",
+		"DE": "Web-Steuerung öffnen...",
+		"EN": "Open Web Control...",
+		"FR": "Ouvrir le contrôle Web...",
+		"NL": "Open Web Control..."
+	},
+	"START_SERVICE": {
+		"DA": "Start tjeneste",
+		"DE": "Server starten",
+		"EN": "Start Server",
+		"FR": "Démarrer le serveur",
+		"NL": "Service starten"
+	},
+	"SERVICE_STARTING": {
+		"DA": "Tjeneste starter...",
+		"DE": "Server wird gestartet...",
+		"EN": "Server is starting up...",
+		"FR": "Le serveur démarre...",
+		"NL": "De service begint..."
+	},
+	"AUTOSTART_ON": {
+		"DA": "✓ Kør tjeneste automatisk",
+		"DE": "✓ Server automatisch ausführen",
+		"EN": "✓ Run Server automatically",
+		"FR": "✓ Exécuter le serveur automatiquement",
+		"NL": "✓ Service automatisch uitvoeren"
+	},
+	"AUTOSTART_OFF": {
+		"DA": "Kør tjeneste automatisk",
+		"DE": "Server automatisch ausführen",
+		"EN": "Run Server automatically",
+		"FR": "Exécuter le serveur automatiquement",
+		"NL": "Service automatisch uitvoeren"
+	},
+	"SETUP_RESCAN": {
+		"DA": "Gennemsøg mediebibliotek igen",
+		"DE": "Medienbibliothek erneut durchsuchen",
+		"EN": "Rescan Media Library",
+		"FR": "Analyser la bibliothèque multimédia",
+		"NL": "Mediabibliotheek opnieuw scannen"
+	},
+	"SETUP_WIPEDB": {
+		"DA": "Ryd biblioteket, og gennemsøg alle mapper igen",
+		"DE": "Datenbank löschen und alles neu durchsuchen",
+		"EN": "Clear library and rescan everything",
+		"FR": "Effacer la bibliothèque et tout analyser à nouveau",
+		"NL": "Mediabibliotheek wissen en alles opnieuw scannen"
+	},
+	"SETUP_STANDARDRESCAN": {
+		"DA": "Søg efter nye og ændrede mediefiler",
+		"DE": "Nach neuen und veränderten Mediendateien suchen",
+		"EN": "Look for new and changed media files",
+		"FR": "Rechercher les fichiers multimédias ajoutés ou modifiés",
+		"NL": "Nieuwe en gewijzigde mediabestanden zoeken"
+	},
+	"UPDATE_AVAILABLE": {
+		"DA": "✨ En opdateret version er tilgængelig",
+		"DE": "✨ Eine aktualisierte Version ist verfügbar",
+		"EN": "✨ An updated version is available",
+		"FR": "✨ Une nouvelle version est disponible",
+		"NL": "✨ Een bijgewerkte versie is beschikbaar"
+	},
+	"UPDATE_TITLE": {
+		"DA": "Lyrion Music Server opdatering",
+		"DE": "Lyrion Music Server Aktualisierung",
+		"EN": "Lyrion Music Server Update",
+		"FR": "Mise à jour Lyrion Music Server",
+		"NL": "Lyrion Music Server Update"
+	},
+	"INSTALL_UPDATE": {
+		"DA": "For at opdatere din Lyrion Music Server, stop tjenesten, afslut punktet i menubjælken, og flyt \"Lyrion Music Server\" applikationen til dit \"Applications\" katalog.",
+		"DE": "Um die aktualisierte Version von Lyrion Music Server zu installieren, stoppen Sie den Server, beenden Sie das Element in der Menüzeile, und verschieben Sie die \"Lyrion Music Server\" Anwendung in den \"Programme\" Ordner.",
+		"EN": "In order to update your Lyrion Music Server, stop the server, quit the menu bar item, and move the \"Lyrion Music Server\" application to your \"Applications\" folder.",
+		"FR": "Pour mettre à jour votre Lyrion Music Server, arrêtez le serveur, quittez l'élément de la barre de menu et déplacez l'application « Lyrion Music Server » dans votre dossier « Applications ».",
+		"NL": "Om je Lyrion Music Server bij te werken, stop je de service, sluit je het menu af en verplaats je het programma \"Lyrion Music Server\" naar je map \"Toepassingen\"."
+	},
+	"UNINSTALL_PREFPANE": {
+		"DA": "🧹 Afinstaller gamle LMS systemindstillinger",
+		"DE": "🧹 Die alte LMS Systemeinstellung entfernen",
+		"EN": "🧹 How to uninstall the legacy Settings Pane",
+		"FR": "🧹 Désinstaller les anciens Réglages Système",
+		"NL": "🧹 Het oude instellingenpaneel verwijderen"
+	}
+}

@@ -1,12 +1,10 @@
 #!/usr/bin/make -f
 
-# $Id$
-
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 export DH_INTERNAL_BUILDFLAGS=1
 
-package=logitechmediaserver
+package=lyrionmusicserver
 base=$(CURDIR)/debian/$(package)
 source=$(CURDIR)/../server
 
@@ -23,7 +21,7 @@ override_dh_gencontrol:
 	dh_gencontrol
 	sed -i '/^Depends/s/init-system-helpers[^,]*,\s*//' ${base}/DEBIAN/control
 
-# Overrides for variances within Logitech Media Server file locations
+# Overrides for variances within Lyrion Music Server file locations
 override_dh_perl:
 	# using hard-coded dependency in control file
 
@@ -38,3 +36,6 @@ override_dh_install:
 	install -m0755 ${source}/scanner.pl ${base}/usr/sbin/squeezeboxserver-scanner
 	install -m0755 ${source}/cleanup.pl ${base}/usr/sbin/squeezeboxserver-cleanup
 	install -m0755 ${source}/gdresized.pl ${base}/usr/sbin/squeezeboxserver-resized
+
+override_dh_builddeb:
+	dh_builddeb -- -Zxz

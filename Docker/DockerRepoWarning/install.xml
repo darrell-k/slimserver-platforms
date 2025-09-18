@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<extension>
+	<id>4fd3cdb3-b665-4709-997d-9c58271c2e9b</id>
+	<name>PLUGIN_DOCKER_REPO_WARNING</name>
+	<module>Slim::Plugin::DockerRepoWarning::Plugin</module>
+	<icon>plugins/DockerRepoWarning/html/icon.png</icon>
+	<version>1.0</version>
+	<description>PLUGIN_DOCKER_REPO_WARNING_DESC</description>
+	<creator>Lyrion Community</creator>
+	<category>misc</category>
+	<defaultState>enabled</defaultState>
+	<type>2</type>
+	<targetApplication>
+		<id>Lyrion Music Server</id>
+		<minVersion>8.5</minVersion>
+		<maxVersion>9.0</maxVersion>
+	</targetApplication>
+</extension>

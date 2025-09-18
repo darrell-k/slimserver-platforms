@@ -1,11 +1,11 @@
-# logitechmediaserver
+# lyrionmusicserver
 
-The [LMS Community](https://github.com/LMS-Community)'s Docker image for [Logitech Media Server](https://github.com/Logitech/slimserver/) ([Dockerfile](https://github.com/Logitech/slimserver-platforms/tree/public/8.2/Docker)).
+The [LMS Community](https://github.com/LMS-Community)'s Docker image for [Lyrion Music Server](https://github.com/LMS-Community/slimserver/) ([Dockerfile](https://github.com/LMS-Community/slimserver-platforms/tree/HEAD/Docker)). This formerly was known as `logitechmediaserver`.
 
 ## Tags
-* `latest`: the latest release version, currently v8.3.1
-* `stable`: the [bug fix branch](https://github.com/Logitech/slimserver/tree/public/8.3) based on the latest release, currently v8.3.2
-* `dev`: the [development version](https://github.com/Logitech/slimserver/), with new features, and potentially less stability, currently v8.4.0
+* `latest`: the latest release version, currently v9.0.2
+* `stable`: the [bug fix branch](https://github.com/LMS-Community/slimserver/tree/public/9.0) based on the latest release, currently v9.0.3
+* `dev`: the [development version](https://github.com/LMS-Community/slimserver/), with new features, and potentially less stability, currently v9.1.0
 
 ## Installation
 
@@ -22,10 +22,10 @@ docker run -it \
       -p 9090:9090/tcp \
       -p 3483:3483/tcp \
       -p 3483:3483/udp \
-      lmscommunity/logitechmediaserver
+      lmscommunity/lyrionmusicserver
 ```
 
-Please note that the http port always has to be a 1:1 mapping. You can't just map it like `-p 9002:9000`, as Logitech Media Server is telling players on which port to connect. Therefore if you have to use a different http port for LMS (other than 9000) you'll have to set the `HTTP_PORT` environment variable, too:
+Please note that both the http port 9000 and the cli port 9090 must always be mapped 1:1. You can't just map it like `-p 9002:9000`, as Lyrion Music Server is telling players on which port to connect. The cli port can be updated after you deploy the container via the Lyrion web ui settings page under advanced/command line interface(CLI) to match your updated 1:1 mapping. However, if you have to use a different http port for LMS (other than 9000) you'll have to set the `HTTP_PORT` environment variable, too:
 
 ```
 docker run -it \
@@ -39,7 +39,7 @@ docker run -it \
       -p 3483:3483/tcp \
       -p 3483:3483/udp \
       -e HTTP_PORT=9002 \
-      lmscommunity/logitechmediaserver
+      lmscommunity/lyrionmusicserver
 ```
 
 Docker compose:
@@ -48,7 +48,7 @@ version: '3'
 services:
   lms:
     container_name: lms
-    image: lmscommunity/logitechmediaserver
+    image: lmscommunity/lyrionmusicserver
     volumes:
       - /<somewhere>:/config:rw
       - /<somewhere>:/music:ro
@@ -60,16 +60,34 @@ services:
       - 9090:9090/tcp
       - 3483:3483/tcp
       - 3483:3483/udp
+    environment:
+      - HTTP_PORT=9000
     restart: always
 ```
 
-Alternatively you can specify the user and group id to use:
-For run add:
+By default, the server will use the container id as its name, you can set it to something else by providing a hostname.
+
+For `docker run` add:
+
+```
+  -h my-preferred-hostname
+```
+
+or for `docker compose` add (at the same level as `container_name`):
+
+```
+    hostname: my-preferred-hostname
+```
+
+You can specify the user and group id to use:
+
+For `docker run` add:
 ```
   -e PUID=1000 \
   -e PGID=1000
 ```
-For compose add:
+
+For `docker compose` add:
 ```
 environment:
   - PUID=1000
@@ -77,6 +95,7 @@ environment:
 ```
 
 ## Advanced configuration notes
+
 
 ### If you can't map to `/etc/localtime` or `/etc/timezone`
 
@@ -88,17 +107,52 @@ Some systems wouldn't allow you to map volumes outside specific folders, eg. Unr
 
 ### Docker on Synology
 * use `/etc/TZ` instead of `/etc/timezone`
-* you'll likely have to use another port than 9000. Synology traditionally used port 9002 to run Logitech Media Server on. See above note about mapping ports to make sure this is working as expected!
+* you'll likely have to use another port than 9000. Synology traditionally used port 9002 to run Lyrion Music Server on. See above note about mapping ports to make sure this is working as expected!
+* you should either use `host` mode to automatically expose LMS on your network, or add another variable `EXTRA_ARGS` with the value `"--advertiseaddr=192.168.0.100"` (where you'd put your NAS' IP address) - see below for details.
 
 ### How to manually install plugins
-If you're a developer you might want to install plugins manually, before they are available through LMS' built-in plugin manager. In order to do so, put them inside `[config folder]/Cache/Plugins`, then restart LMS. They should be available in thereafter.
+If you're a developer you might want to install plugins manually, before they are available through LMS' built-in plugin manager. In order to do so, put them inside `[config folder]/cache/Plugins`, then restart LMS. They should be available in thereafter.
 
-### Running a script before the launch of Logitech Media Server (v8.2.0+)
-You can put a script called `custom-init.sh` in the configuration folder. If that script exists, it will be executed before Logitech Media Server is launched. This would allow you to add additional software packages to the container. Eg. the following two lines put into `custom-init.sh` will install `ffmpeg` for use with some plugins:
+### Passing additional launch arguments
+Starting with v8.4 an optional `EXTRA_ARGS` environment variable exists for passing additional arguments to Lyrion Music Server process. For example, disabling the web interface could be achieved with `EXTRA_ARGS="--noweb"`.
+
+### Define the service's IP address
+Some plugins like eg. the Sounds & Effects, require the player to know the server's IP address. In the default `bridge` networking mode, the internal IP address would be different from what the player can see. Therefore playback would fail - unless we tell Lyrion Music Server what port to announce. This can be done using the above method to define the `--advertiseaddr` parameter (do not put quotes around the parameter!):
+
+
+```
+docker run -it \
+      -v "<somewhere>":"/config":rw \
+      -v "<somewhere>":"/music":ro \
+      -v "<somewhere>":"/playlist":rw \
+      -v "/etc/localtime":"/etc/localtime":ro \
+      -v "/etc/timezone":"/etc/timezone":ro \
+      -p 9000:9000/tcp \
+      -p 9090:9090/tcp \
+      -p 3483:3483/tcp \
+      -p 3483:3483/udp \
+      -e EXTRA_ARGS=--advertiseaddr=192.168.0.100 \
+      lmscommunity/lyrionmusicserver
+```
+### Using the Local Player Plugin inside your Container
+NOTE: This requires audio hardware installed on the host machine which means this is unlikely to work on most NAS solutions like Synology or QNAP.
+
+To use the Local Player plugin you need to specify an audio device to use:
+
+For `docker run` add:
+```
+  --device /dev/snd \
+```
+
+For `docker compose` add:
+```
+    devices: 
+      - /dev/snd:/dev/snd
+```
+
+### Running a script before the launch of Lyrion Music Server (v8.2.0+)
+You can put a script called `custom-init.sh` in the configuration folder. If that script exists, it will be executed before Lyrion Music Server is launched. This would allow you to add additional software packages to the container. Eg. the following two lines put into `custom-init.sh` will install `ffmpeg` for use with some plugins:
 ```
 apt-get update -qq
 apt-get install --no-install-recommends -qy ffmpeg
 ```
-
-### Passing additional launch arguments
-An optional `EXTRA_ARGS` environment variable exists for passing additional arguments to Logitech Media Server process. For example, disabling the web interface could be achieved with `EXTRA_ARGS="--noweb"`.

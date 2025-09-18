@@ -1,16 +1,21 @@
 ;
-; InnoSetup Script for Logitech Media Server
+; InnoSetup Script for Lyrion Music Server
 ;
-; Logitech : https://www.logitech.com
+; Lyrion Community: https://www.lyrion.org
 
-#define AppName    "Logitech Media Server"
-#define AppVersion "8.4.0"
+#define AppName    "Lyrion Music Server"
+#define AppVersion "9.1.0"
 #define ProductURL "https://forums.slimdevices.com"
-#define SBRegKey   "Software\Logitech\Squeezebox"
+#define FolderName "Lyrion"
+#define SBRegKey   "SOFTWARE\Lyrion\Server"
+#define LegacyRegkey "SOFTWARE\Logitech\Squeezebox"
+#define LegacyUninstaller "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Logitech Media Server_is1"
+#define W32Uninstaller "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Lyrion Music Server_is1"
 #define LMSPerl    "Perl"
 #define LMSPerlBin "Perl\perl\bin\perl.exe"
 #define ServiceName "squeezesvc"
-#define StrawBerryPerlURL "https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit-portable.zip"
+; #define StrawBerryPerlURL "https://strawberryperl.com/download/5.32.1.1/strawberry-perl-5.32.1.1-64bit-portable.zip"
+#define StrawBerryPerlURL "https://downloads.lms-community.org/StrawberryPerl/strawberry-perl-5.32.1.1-64bit-portable.zip"
 #define StrawBerryPerlZIP "strawberry.zip"
 
 [Languages]
@@ -41,20 +46,20 @@ VersionInfoProductName={#AppName} {#AppVersion}
 VersionInfoProductVersion={#AppVersion}
 VersionInfoVersion=0.0.0.0
 
-AppPublisher=Logitech Inc.
+AppPublisher=Lyrion Community
 AppPublisherURL={#ProductURL}
 AppSupportURL={#ProductURL}
 AppUpdatesURL={#ProductURL}
-DefaultDirName={commonpf64}\Squeezebox
+DefaultDirName={commonpf64}\{#FolderName}
 DefaultGroupName={#AppName}
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 DisableReadyPage=yes
 WizardImageFile=squeezebox.bmp
-WizardSmallImageFile=logi.bmp
+WizardSmallImageFile=logo.bmp
 OutputBaseFilename=SqueezeSetup64
 DirExistsWarning=no
-ArchitecturesAllowed=x64
+ArchitecturesAllowed=x64compatible
 SolidCompression=yes
 
 [Files]
@@ -63,6 +68,8 @@ SolidCompression=yes
 Source: psvince.dll; Flags: dontcopy
 Source: instsvc.pl; Flags: dontcopy
 Source: SqueezeCenter.ico; DestDir: "{app}"
+Source: 7z.exe; Flags: dontcopy
+Source: 7z.dll; Flags: dontcopy
 
 ; Next line takes everything from the source '\server' directory and copies it into the setup
 ; it's output into the same location from the users choice.
@@ -70,43 +77,40 @@ Source: server\*.*; DestDir: {app}\server; Excludes: "*freebsd*,*openbsd*,*darwi
 Source: Output\SqzSvcMgr.exe; DestDir: {app}; Flags: ignoreversion
 
 [Dirs]
-Name: {commonappdata}\Squeezebox; Permissions: users-modify
+Name: {commonappdata}\{#FolderName}; Permissions: users-modify
 Name: {app}\server\Plugins; Permissions: users-modify
-Name: {app}\server\Bin; Permissions: users-modify
 
 [Icons]
 Name: {group}\{cm:SqueezeCenterWebInterface}; Filename: "http://localhost:{code:GetHttpPort}"; IconFilename: "{app}\SqueezeCenter.ico"
 Name: {group}\{cm:Startup_Caption}; Filename: {app}\sqzsvcmgr.exe
 Name: {group}\{cm:UninstallSqueezeCenter}; Filename: {uninstallexe}
+Name: {group}\{cm:Start_LMS}; Filename: "{app}\{#LMSPerlBin}"; Parameters: """{app}\server\slimserver.pl"""; WorkingDir: "{app}\server"; IconFilename: "{app}\SqueezeCenter.ico"; Flags: runminimized
 
 [Registry]
-Root: HKLM; Subkey: SOFTWARE\Logitech\Squeezebox; ValueType: string; ValueName: Path64; ValueData: {app}
-Root: HKLM; Subkey: SOFTWARE\Logitech\Squeezebox; ValueType: string; ValueName: DataPath; ValueData: {code:GetWritablePath}
+Root: HKLM64; Subkey: {#SBRegKey}; ValueType: string; ValueName: "DataPath"; ValueData: {code:GetWritablePath}
 
 [InstallDelete]
 Type: filesandordirs; Name: {group}
+Type: filesandordirs; Name: {app}\server\CPAN
+Type: filesandordirs; Name: {app}\server\Slim
+Type: filesandordirs; Name: {app}\server\HTML
 
 [UninstallDelete]
-Type: dirifempty; Name: {app}
-Type: dirifempty; Name: {app}\server
-Type: dirifempty; Name: {app}\server\IR
-Type: dirifempty; Name: {app}\server\Plugins
-Type: dirifempty; Name: {app}\server\HTML
-Type: dirifempty; Name: {app}\server\SQL
+Type: filesandordirs; Name: {app}
 
 [Run]
-Filename: "sc"; Parameters: "failure {#ServiceName} reset= 180 actions= restart/1000/restart/1000/restart/1000"; Flags: runhidden
-Filename: "sc"; Parameters: "start {#ServiceName}"; Flags: runhidden; MinVersion: 0,4.00.1381
-Filename: "http://localhost:{code:GetHttpPort}"; Description: {cm:StartupSqueezeCenterWebInterface}; Flags: postinstall nowait skipifsilent shellexec unchecked
+Filename: {sys}\sc.exe; Parameters: "failure {#ServiceName} reset= 180 actions= restart/1000/restart/1000/restart/1000"; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "config {#ServiceName} start= delayed-auto"; Flags: runhidden
+Filename: "{code:WaitForService}"; Description: {cm:StartupSqueezeCenterWebInterface}; Flags: postinstall skipifsilent skipifdoesntexist unchecked
 
 ; Remove old firewall rules, then add new
-Filename: "netsh"; Parameters: "advfirewall firewall delete rule name=""Logitech Media Server"""; Flags: runhidden
+Filename: "netsh"; Parameters: "advfirewall firewall delete rule name=""Lyrion Music Server"""; Flags: runhidden
 Filename: "netsh"; Parameters: "advfirewall firewall delete rule name=""{#AppName} (Perl)"""; Flags: runhidden
 Filename: "netsh"; Parameters: "advfirewall firewall add rule name=""{#AppName} (Perl)"" dir=in program=""{app}\{#LMSPerlBin}"" action=allow"; Flags: runhidden
 
 [UninstallRun]
-Filename: "sc"; Parameters: "stop {#ServiceName}"; Flags: runhidden; MinVersion: 0,4.00.1381; RunOnceId: StopSqueezSVC
-Filename: "sc"; Parameters: "delete {#ServiceName}"; Flags: runhidden; MinVersion: 0,4.00.1381; RunOnceId: DeleteSqueezSVC
+Filename: {sys}\sc.exe; Parameters: "stop {#ServiceName}"; Flags: runhidden; MinVersion: 0,4.00.1381; RunOnceId: StopSqueezSVC
+Filename: {sys}\sc.exe; Parameters: "delete {#ServiceName}"; Flags: runhidden; MinVersion: 0,4.00.1381; RunOnceId: DeleteSqueezSVC
 
 [Code]
 #include "SocketTest.iss"
@@ -118,7 +122,6 @@ var
 
 	// custom exit codes
 	// 1001 - SC configuration was found using port 9000, but port 9000 seems to be busy with an other application (PrefsExistButPortConflict)
-	// 1002 - SC wasn't able to establish a connection to mysqueezebox.com on port 3483 (SNConnectFailed_Description)
 	// 1101 - SliMP3 uninstall failed
 	// 1102 - SlimServer uninstall failed
 	// 1103 - SqueezeCenter uninstall failed
@@ -143,8 +146,20 @@ function GetWritablePath(Param: String) : String;
 var
 	DataPath: String;
 begin
+	// Migrate legacy registry key
+	if (RegQueryStringValue(HKLM, '{#LegacyRegkey}', 'DataPath', DataPath)) then
+		begin
+			RegWriteStringValue(HKLM64, '{#SBRegKey}', 'DataPath', DataPath);
+			RegDeleteValue(HKLM, '{#LegacyRegkey}', 'DataPath');
+		end;
 
-	if (not RegQueryStringValue(HKLM, '{#SBRegKey}', 'DataPath', DataPath)) then
+	if (RegQueryStringValue(HKLM, '{#SBRegKey}', 'DataPath', DataPath)) then
+		begin
+			RegWriteStringValue(HKLM64, '{#SBRegKey}', 'DataPath', DataPath);
+			RegDeleteValue(HKLM, '{#SBRegKey}', 'DataPath');
+		end;
+
+	if (not RegQueryStringValue(HKLM64, '{#SBRegKey}', 'DataPath', DataPath)) then
 		begin
 
 			if ExpandConstant('{commonappdata}') = '' then
@@ -157,7 +172,7 @@ begin
 			else
 				DataPath := ExpandConstant('{commonappdata}');
 
-			DataPath := AddBackslash(DataPath) + 'Squeezebox';
+			DataPath := AddBackslash(DataPath) + ExpandConstant('{#FolderName}');
 		end;
 
 	Result := DataPath;
@@ -187,6 +202,36 @@ begin
 		RegWriteMultiStringValue(HKLM, RegKey, RegValue, ReservedPorts + #0 + Port + '-' + Port);
 end;
 
+procedure ExtractArchive(ArchivePath: string; DestPath: string);
+var
+	ExtracterPath: string;
+	CommandLine: string;
+	ResultCode: Integer;
+	Message: string;
+begin
+	ExtractTemporaryFile('7z.exe');
+	ExtractTemporaryFile('7z.dll');
+
+	ExtracterPath := ExpandConstant('{tmp}') + '\7z.exe';
+	CommandLine := Format('"%s" x -y -o"%s" "%s"', [ExtracterPath, DestPath, ArchivePath]);
+	Log(Format('Executing: %s', [CommandLine]));
+	CommandLine := Format('/C "%s"', [CommandLine]);
+
+	if not Exec(ExpandConstant('{cmd}'), CommandLine, '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
+	begin
+		RaiseException('Cannot start extracter');
+	end
+		else
+			if ResultCode <> 0 then
+			begin
+				RaiseException(Format('Extraction failed failed with code %d', [ResultCode]));
+			end
+		else
+	begin
+		Log('Extraction done');
+	end;
+end;
+
 function OnDownloadProgress(const Url, Filename: string; const Progress, ProgressMax: Int64): Boolean;
 begin
 	if ProgressMax <> 0 then
@@ -212,7 +257,8 @@ end;
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var
 	Shell, ZipFile, TargetFolder: Variant;
-	PerlPath: string;
+	PerlPath, Uninstaller: string;
+	ErrorCode: Integer;
 
 begin
 	if not FileExists(ExpandConstant('{app}\{#LMSPerlBin}')) then
@@ -224,6 +270,7 @@ begin
 		DownloadPage.AbortButton.Show();
 
 		try
+			Log('Done downloading Strawberry Perl');
 			Shell := CreateOleObject('Shell.Application');
 
 			PerlPath := ExpandConstant('{app}\{#LMSPerl}');
@@ -241,13 +288,40 @@ begin
 			if VarIsClear(ZipFile) then
 				RaiseException(Format('ZIP file "%s" does not exist or cannot be opened', [ZipFile]));
 
-			TargetFolder.CopyHere(ZipFile.Items, 16);    // SHCONTCH_RESPONDYESTOALL = 16; SHCONTCH_NOPROGRESSBOX = 4;
+			Log(Format('Extracting Strawberry Perl to "%s"', [PerlPath]));
+
+			// Use 7zip instead of Windows' built-in zip handling, as the latter is extremely slow (10x+)
+			// TargetFolder.CopyHere(ZipFile.Items, 16);    // SHCONTCH_RESPONDYESTOALL = 16; SHCONTCH_NOPROGRESSBOX = 4;
+			ExtractArchive(AddBackslash(ExpandConstant('{tmp}')) + '{#StrawBerryPerlZIP}', PerlPath);
+			Log('Done extracting Strawberry Perl');
 		except
 			Log(GetExceptionMessage);
 			Result := GetExceptionMessage;
 		finally
 			DownloadPage.Hide();
 		end;
+	end;
+
+	if (RegQueryStringValue(HKLM, '{#LegacyUninstaller}', 'UninstallString', Uninstaller)) then
+	begin
+		try
+			Log('Remove legacy LMS uninstaller');
+			StopService('{#ServiceName}');
+			RemoveService('{#ServiceName}');
+			ShellExec('', Uninstaller, '/SILENT /SUPPRESSMSGBOXES', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ErrorCode);
+		finally
+		end;
+	end;
+
+	if (RegQueryStringValue(HKLM, '{#W32Uninstaller}', 'UninstallString', Uninstaller)) then
+	begin
+		try
+			Log('Remove 32-bit LMS uninstaller');
+			StopService('{#ServiceName}');
+			RemoveService('{#ServiceName}');
+			ShellExec('', Uninstaller, '/SILENT /SUPPRESSMSGBOXES', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ErrorCode);
+		finally
+		end
 	end;
 end;
 
@@ -276,8 +350,8 @@ begin
 			ProgressPage := CreateOutputProgressPage(CustomMessage('RegisterServices'), CustomMessage('RegisterServicesDesc'));
 
 			try
-				ProgressPage.Show;
-				ProgressPage.setProgress(0, 170);
+				ProgressPage.Show();
+				ProgressPage.setProgress(0, 100);
 
 				// check network configuration and potential port conflicts
 				ProgressPage.setText(CustomMessage('ProgressForm_Description'), CustomMessage('PortConflict'));
@@ -312,16 +386,6 @@ begin
 
 				NewServerDir := AddBackslash(ExpandConstant('{app}')) + AddBackslash('server');
 
-				// trying to connect to SN
-				ProgressPage.setText(CustomMessage('ProgressForm_Description'), CustomMessage('SNConnecting'));
-				ProgressPage.setProgress(ProgressPage.ProgressBar.Position+10, ProgressPage.ProgressBar.Max);
-
-				if not IsPortOpen('www.mysqueezebox.com', '3483') then
-				begin
-					SuppressibleMsgBox(CustomMessage('SNConnectFailed_Description') + #13#10 + #13#10 + CustomMessage('SNConnectFailed_Solution'), mbInformation, MB_OK, IDOK);
- 					CustomExitCode := 1002;
-				end;
-
 				ProgressPage.setText(CustomMessage('RegisteringServices'), '{#AppName}');
 				ProgressPage.setProgress(ProgressPage.ProgressBar.Position+10, ProgressPage.ProgressBar.Max);
 
@@ -330,14 +394,80 @@ begin
 				RegisterPort('9090');
 				RegisterPort('3483');
 
+				ProgressPage.setProgress(ProgressPage.ProgressBar.Position+10, ProgressPage.ProgressBar.Max);
+
 				ExtractTemporaryFile('instsvc.pl');
 				if not FileExists(ExpandConstant('{tmp}\instsvc.pl')) then
 					Log('Failed to extract ' + ExpandConstant('{tmp}\instsvc.pl'))
 				else
-					Exec(ExpandConstant('{app}\{#LMSPerlBin}'), ExpandConstant('{tmp}\instsvc.pl "' + NewServerDir + 'slimserver.pl"'), '', SW_HIDE, ewWaitUntilIdle, ErrorCode);
+					Exec(ExpandConstant('{app}\{#LMSPerlBin}'), ExpandConstant('{tmp}\instsvc.pl "' + NewServerDir + 'slimserver.pl"'), '', SW_HIDE, ewWaitUntilTerminated, ErrorCode);
+
+				ProgressPage.setProgress(ProgressPage.ProgressBar.Position+10, ProgressPage.ProgressBar.Max);
+
+				StartService('{#ServiceName}');
+
+				ProgressPage.setProgress(ProgressPage.ProgressBar.Position+10, ProgressPage.ProgressBar.Max);
 			finally
 				ProgressPage.Hide;
 			end;
+		end;
+end;
+
+function WaitForService(Param: String): String;
+var
+	Wait, StoppedCounter, ErrorCode: Integer;
+begin
+	// wait up to x seconds for the services to be started
+	Wait := 30;
+	// but give up if we've been stopped x times
+	StoppedCounter := 3;
+
+	while (Wait > 0) and (StoppedCounter > 0) do
+		begin
+			Log('Waiting for the server to be running...' + IntToStr(Wait));
+
+			// no need to spend a full second, as we'll waste more time trying to connect below
+			Sleep(250);
+
+			if IsPortOpen('127.0.0.1', GetHttpPort('')) then
+				begin
+					Log('Service is reachable');
+					break;
+				end
+
+			else if (IsServiceRunning('{#ServiceName}')) then
+				begin
+					Log('Service is running');
+					break;
+				end
+
+			else if (IsServiceStarting('{#ServiceName}')) then
+				begin
+					Log('Service is still starting...');
+				end
+
+			else if (GetServiceStatus('{#ServiceName}') = 'stopped') then
+				begin
+					Log('Service is stopped');
+					StoppedCounter := StoppedCounter - 1;
+				end;
+
+			Wait := Wait - 1;
+		end;
+
+	if (Wait = 0) or (StoppedCounter = 0) then
+		begin
+			Log('Service did not start in time');
+			if (SuppressibleTaskDialogMsgBox(CustomMessage('ProblemStartingLMS'), CustomMessage('TroubleShootServiceStart'),
+											mbInformation, MB_YESNO, [CustomMessage('MoreInformation'), CustomMessage('Close')], 0, IDYES) = IDYES) then
+				ShellExec('open', CustomMessage('TroubleShootServiceStartURL'),'','', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+
+			Result := 'Service did not start in time';
+		end
+	else
+		begin
+			Result := '';
+			ShellExecAsOriginalUser('', 'http://localhost:' + GetHttpPort(''), '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 		end;
 end;
 
@@ -359,15 +489,14 @@ begin
 			if not UninstallSilent then
 				begin
 					Deltree(ExpandConstant('{app}\server\Cache'), True, True, True);
-					Deltree(ExpandConstant('{commonappdata}\Squeezebox\Cache'), True, True, True);
 					Deltree(ExpandConstant('{code:GetWritablePath}\Cache'), True, True, True);
 				end;
 
 			if SuppressibleMsgBox(CustomMessage('UninstallPrefs'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then
 				begin
 					DelTree(GetWritablePath(''), True, True, True);
-					RegDeleteKeyIncludingSubkeys(HKCU, '{#SBRegKey}');
 					RegDeleteKeyIncludingSubkeys(HKLM, '{#SBRegKey}');
+					RegDeleteKeyIncludingSubkeys(HKLM64, '{#SBRegKey}');
 				end;
 		end;
 end;

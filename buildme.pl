@@ -16,11 +16,11 @@ use constant DESTDIR_NOT_REQUIRED => '[not required]';
 
 ## Here we set some basic settings.. most of these dont need to change very often.
 my $squeezeCenterStartupScript = "server/slimserver.pl";
-my $sourceDirsToExclude = ".svn .git .github t tests slimp3 squeezebox /softsqueeze tools ext/source ext-all-debug.js build Firmware/*.bin NYTProf Plugins/*";
+my $sourceDirsToExclude = ".vscode .vstags .secrets .gitignore .editorconfig .svn .git .github t tests slimp3 squeezebox /softsqueeze tools ext/source ext-all-debug.js build Firmware/*.bin NYTProf Plugins/*";
 my $revisionTextFile = "server/revision.txt";
 my $revision;
 my $myVersion = "1.1.0";
-my $defaultDestName = "logitechmediaserver";
+my $defaultDestName = "lyrionmusicserver";
 my $defaultReleaseType = "nightly";
 
 ## Windows Specific Stuff
@@ -28,7 +28,7 @@ my $windowsPerlDir = "C:\\perl";
 my $windowsPerlPath = "$windowsPerlDir\\bin\\perl.exe";
 
 ## Directories to exclude when building certain packages...
-my $dirsToExcludeForLinuxTarball = "i386-freebsd-64int MSWin32-x86-multi-thread MSWin32-x64-multi-thread darwin darwin-x86_64 PreventStandby";
+my $dirsToExcludeForLinuxTarball = "i386-freebsd-64int MSWin32-x86-multi-thread MSWin32-x64-multi-thread darwin darwin-x86_64 PreventStandby i86pc-solaris-thread-multi-64int powerpc-linux sparc-linux";
 my $dirsToExcludeForLinuxPackage = "$dirsToExcludeForLinuxTarball 5.10 5.12 5.14 5.16 5.18";
 my $dirsToExcludeForFreeBSDTarball = "MSWin32-x86-multi-thread MSWin32-x64-multi-thread PreventStandby i386-linux x86_64-linux i86pc-solaris-thread-multi-64int darwin darwin-x86_64 sparc-linux arm-linux armhf-linux powerpc-linux aarch64-linux icudt46b.dat";
 my $dirsToExcludeForARMTarball = "MSWin32-x86-multi-thread MSWin32-x64-multi-thread PreventStandby i386-linux x86_64-linux i86pc-solaris-thread-multi-64int darwin darwin-x86_64 sparc-linux i386-freebsd-64int powerpc-linux icudt46b.dat icudt58b.dat";
@@ -39,16 +39,19 @@ my $dirsToExcludeFori386Deb = "5.10 5.12 5.14 5.16 5.18 MSWin32-x86-multi-thread
 my $dirsToExcludeForLinuxNoCpanTarball = "i386-freebsd-64int MSWin32-x86-multi-thread MSWin32-x64-multi-thread i86pc-solaris-thread-multi-64int darwin darwin-x86_64 i386-linux sparc-linux x86_64-linux arm-linux armhf-linux powerpc-linux aarch64-linux /arch/ PreventStandby";
 my $dirsToExcludeForLinuxNoCpanLightTarball = $dirsToExcludeForLinuxNoCpanTarball . " /Bin/ /HTML/! /Firmware/ /MySQL/ Graphics/CODE2000* Plugin/DateTime DigitalInput iTunes LineIn LineOut MusicMagic RSSNews Rescan SavePlaylist SlimTris Snow Plugin/TT/ Visualizer xPL";
 my $dirsToIncludeForLinuxNoCpanLightTarball = "EN.*html/images CPAN/HTML";
-my $dirsToExcludeForMacOSX = "5.10 5.12 5.14 5.16 5.20 5.22 5.24 5.26 5.28 5.30 5.32 5.36 5.38 i386-freebsd-64int i386-linux x86_64-linux x86_64-linux-gnu-thread-multi MSWin32 i86pc-solaris-thread-multi-64int arm-linux armhf-linux powerpc-linux sparc-linux aarch64-linux";
-my $dirsToExcludeForWin32 = "5.10 5.12 5.16 5.18 5.20 5.22 5.24 5.26 5.28 5.30 5.32 5.34 5.36 5.38 MSWin32-x64-multi-thread i386-freebsd-64int i386-linux x86_64-linux x86_64-linux-gnu-thread-multi i86pc-solaris-thread-multi-64int darwin darwin-x86_64 sparc-linux arm-linux armhf-linux powerpc-linux aarch64-linux OS/Debian.pm OS/Linux.pm OS/Unix.pm OS/OSX.pm OS/RedHat.pm OS/Suse.pm OS/SlimService.pm OS/Synology.pm OS/SqueezeOS.pm icudt46b.dat icudt46l.dat icudt58b.dat icudt58l.dat";
-my $dirsToExcludeForWin64 = "5.14 $dirsToExcludeForWin32";
-$dirsToExcludeForWin64 =~ s/5.32 |MSWin32-x64-multi-thread //g;
+my $dirsToExcludeForPCP = "$dirsToExcludeForLinuxNoCpanTarball CPAN/Font";
+my $dirsToExcludeForMacOS = "5.10 5.12 5.14 5.16 5.20 5.22 5.24 5.26 5.28 5.30 5.32 5.36 5.38 5.40 i386-freebsd-64int i386-linux x86_64-linux x86_64-linux-gnu-thread-multi MSWin32 i86pc-solaris-thread-multi-64int arm-linux armhf-linux powerpc-linux sparc-linux aarch64-linux OS/Debian.pm OS/Linux.pm OS/pCP.pm OS/RedHat.pm OS/Suse.pm OS/SlimService.pm OS/Synology.pm OS/SqueezeOS.pm OS/Unix.pm OS/Win32.pm OS/Win64.pm";
+my $dirsToExcludeForWin64 = "5.10 5.12 5.14 5.16 5.18 5.20 5.22 5.24 5.26 5.28 5.30 5.34 5.36 5.38 5.40 i386-freebsd-64int i386-linux x86_64-linux x86_64-linux-gnu-thread-multi i86pc-solaris-thread-multi-64int darwin darwin-x86_64 sparc-linux arm-linux armhf-linux powerpc-linux aarch64-linux OS/Debian.pm OS/Linux.pm OS/OSX.pm OS/pCP.pm OS/RedHat.pm OS/Suse.pm OS/SlimService.pm OS/Synology.pm OS/SqueezeOS.pm OS/Unix.pm icudt46b.dat icudt46l.dat icudt58b.dat icudt58l.dat";
 
-# for Docker we provide x86_64 and armhf for Perl 5.32 only
-my $dirsToExcludeForDocker = "5.10 5.12 5.14 5.16 5.18 5.20 5.22 5.24 5.26 5.28 5.30 5.34 5.36 5.38 MSWin32-x86-multi-thread MSWin32-x64-multi-thread PreventStandby i386-linux i86pc-solaris-thread-multi-64int darwin darwin-x86_64 sparc-linux i386-freebsd-64int powerpc-linux icudt46b.dat icudt58b.dat";
+# for Docker we provide x86_64 and armhf for Perl 5.36 only
+# Dont't forget to keep this list in sync with the file "Docker/.dockerignore"
+my $dirsToExcludeForDocker = "$dirsToExcludeForLinuxPackage 5.20 5.22 5.24 5.26 5.28 5.30 5.32 5.34 5.38 5.40 i386-linux icudt46b.dat icudt58b.dat";
+
+# Musical Fidelity comes with Perl 5.22
+my $dirsToExcludeForEncore = "$dirsToExcludeForLinuxPackage 5.20 5.24 5.26 5.28 5.30 5.32 5.34 5.36 5.38 5.40 i386-linux arm-linux armhf-linux aarch64-linux i86pc-solaris-thread-multi-64int sparc-linux powerpc-linux icudt46l.dat icudt46b.dat";
 
 ## Initialize some variables we'll use later
-my ($build, $destName, $destDir, $buildDir, $sourceDir, $version, $noCPAN, $fakeRoot, $light, $freebsd, $arm, $ppc, $x86_64, $i386, $releaseType, $release, $tag);
+my ($build, $destName, $destDir, $buildDir, $sourceDir, $version, $noCPAN, $fakeRoot, $light, $freebsd, $arm, $encore, $ppc, $x86_64, $i386, $releaseType, $release, $tag, $registry);
 
 
 ##############################################################################################
@@ -73,6 +76,8 @@ sub main {
 
 	## Ok, begin the IF statement... what are we building?
 	doCommandOptions();
+
+	createMD5Checksums();
 }
 
 ##############################################################################################
@@ -93,9 +98,11 @@ sub checkCommandOptions {
 			'i386'          => \$i386,
 			'arm'           => \$arm,
 			'ppc'           => \$ppc,
+			'encore'        => \$encore,
 			'light'         => \$light,
 			'releaseType=s' => \$releaseType,
 			'tag=s'         => \$tag,
+			'registry=s'    => \$registry,
 			'fakeRoot'      => \$fakeRoot);
 
 	if ( !$build ) {
@@ -109,7 +116,7 @@ sub checkCommandOptions {
 		exit(0);
 	}
 
-	if ($build =~ /^tarball|docker|debian|rpm|macosx|win32|win64$/) {
+	if ($build =~ /^tarball|docker|debian|rpm|macos|win64|pcp$/) {
 		## releaseType is an option, but if its not there, we need
 		## to default it to 'nightly'
 		if (!$releaseType) {
@@ -123,7 +130,7 @@ sub checkCommandOptions {
 		}
 
 		## If they passed in all the options, lets go forward...
-		if ($buildDir && $sourceDir && $destDir) {
+		if ($buildDir && $sourceDir && $destDir && ($tag || $build ne 'docker')) {
 			print "INFO: Required variables passed in. Moving forward.\n";
 			return $build;
 
@@ -144,7 +151,7 @@ sub checkCommandOptions {
 }
 
 ##############################################################################################
-## Here we search through the Logitech Media Server startup script to dynamically grab the version  ##
+## Here we search through the Lyrion Music Server startup script to dynamically grab the version  ##
 ## number for the rest of our script.							    ##
 ##############################################################################################
 
@@ -289,6 +296,12 @@ sub doCommandOptions {
 			buildTarball($dirsToExcludeForARMTarball, "$destDir/$destName-arm-linux");
 		} elsif ($ppc) {
 			buildTarball($dirsToExcludeForPPCTarball, "$destDir/$destName-powerpc-linux");
+		} elsif ($encore) {
+			system("mkdir -p \"$buildDir/server/Plugins\"; rm -rf \"$buildDir/server/Plugins/*\"");
+			system("cp -R \"$buildDir/platforms/MusicalFidelity/M6Encore\" \"$buildDir/server/Plugins/\" ");
+			copy("$buildDir/platforms/MusicalFidelity/Custom.pm", "$buildDir/server/Slim/Utils/OS");
+			move("$buildDir/server/CPAN/arch/5.22/x86_64-linux-thread-multi", "$buildDir/server/CPAN/arch/5.22/x86_64-linux");
+			buildTarball($dirsToExcludeForEncore, "$destDir/$destName-MusicalFidelity", "Plugins/M6Encore");
 		} else {
 			## Use the CPAN variables
 			buildTarball($dirsToExcludeForLinuxTarball, "$destDir/$destName");
@@ -298,32 +311,30 @@ sub doCommandOptions {
 		buildDockerImage();
 
 	} elsif ($build eq "debian") {
-		## Build a Debian Package
 		buildDebian();
 
 	} elsif ($build eq "rpm") {
-		## Run the RPM
 		buildRPM();
 
-	} elsif ($build eq "macosx") {
-		## Build the Mac OSX package
-		$destName =~ s/$defaultDestName/LogitechMediaServer/;
+	} elsif ($build eq "pcp") {
+		if ( $releaseType && $releaseType eq "release" ) {
+			$destName =~ s/-$revision//;
+		}
+		buildPCP();
+
+	} elsif ($build eq "macos") {
+		## Build the Mac OSX menu bar item
+		$destName =~ s/$defaultDestName/LyrionMusicServer/;
 
 		if ( $releaseType && $releaseType eq "release" ) {
 			$destName =~ s/-$revision//;
 		}
 
-		buildMacOSX("$destName");
-
-	} elsif ($build eq "win32") {
-		## Build the Windows 32bit Installer
-		$destName =~ s/$defaultDestName/LogitechMediaServer/;
-		buildWin32("$destName");
-
+		buildMacOS("$destName");
 
 	} elsif ($build eq "win64") {
 		## Build the Windows 64bit Installer
-		$destName =~ s/$defaultDestName/LogitechMediaServer/;
+		$destName =~ s/$defaultDestName/LyrionMusicServer/;
 		# buildZIPArchive($dirsToExcludeForWin64, "$destDir/$destName-win64");
 		buildWin64("$destName-win64");
 
@@ -331,16 +342,53 @@ sub doCommandOptions {
 }
 
 ##############################################################################################
+## Create MD5 checksum files for each build                                                 ##
+##############################################################################################
+sub createMD5Checksums {
+	return if $build eq 'docker';
+
+	opendir(my $dh, $destDir) or do {
+		warn "Cannot open directory $destDir: $!";
+		return;
+	};
+
+	my @files = grep { /lyrion.*server/i && -f "$destDir/$_" } readdir($dh);
+	closedir($dh);
+
+	# macOS doesn't come with md5sum - use md5 instead
+	if ($^O eq 'darwin') {
+		system("cd $destDir; md5 -r $_ > $_.md5") for @files;
+	} else {
+		system("cd $destDir; md5sum $_ > $_.md5") for @files;
+	}
+}
+
+##############################################################################################
 ## We need to know the revision # of the code, so that we can put it into the source tree   ##
 ##############################################################################################
 sub getRevisionForRepo {
+	my $_getRevision = sub {
+		my $repo = shift;
+
+		my $rev;
+		if (-d "$sourceDir/$repo/.git") {
+			$rev = `git --git-dir=$sourceDir/$repo/.git log -n 1 --pretty=format:%ct`;
+			$rev =~ s/\s*$//s;
+		}
+
+		return $rev;
+	};
+
 	my $revision;
-	if (-d "$sourceDir/server/.git") {
-		$revision = `git --git-dir=$sourceDir/server/.git log -n 1 --pretty=format:%ct`;
-		$revision =~ s/\s*$//s;
+	my $serverRevision = $_getRevision->('server');
+	my $platformsRevision = $_getRevision->('platforms') if $serverRevision;
+
+	if ($serverRevision && $platformsRevision) {
+		$revision = $serverRevision > $platformsRevision ? $serverRevision : $platformsRevision;
 	} else {
 		$revision = 'UNKNOWN';
 	}
+
 	return $revision;
 }
 
@@ -351,71 +399,52 @@ sub showUsage {
 	print "buildme.pl - version ($myVersion) - Help \n";
 	print "-------------------------------------------\n";
 	print "This script can build all of our versions \n";
-	print "of Logitech Media Server... but only one at a time.\n";
+	print "of Lyrion Music Server... but only one at a time.\n";
 	print "Each distribution has its own options, \n";
 	print "listed below... don't try to mix them up! :)\n";
-	print " \n";
-	print "--- Building a Linux Tarball\n";
-	print "    --build tarball <required opts below>\n";
+	print "\n";
+	print "Parameters for all builds:\n";
 	print "    --buildDir <dir>             - The directory to do temporary work in\n";
 	print "    --sourceDir <dir>            - The location of the source code repository\n";
 	print "                                   that you've checked out from Git\n";
-	print "    --destDir <dir>              - The destination you'd like your files \n";
+	print "    --destDir <dir>              - The destination you'd like your files\n";
+	print "    --releaseType <nightly/release>- Whether you're building a 'release' package, \n";
+	print "        (optional)                 or you're building a nightly-style package\n";
+	print "\n";
+	print "--- Building a Linux Tarball\n";
+	print "    --build tarball <required opts above>\n";
 	print "    --destName <filename>        - The name of the tarball you would like to\n";
 	print "       (optional)                  have made. Do not include the .tar.gz/tgz,\n";
 	print "                                   it will be appended automatically.\n";
 	print "    --freebsd (optional)         - Build a package with only FreeBSD 7.2 binaries\n";
 	print "    --arm (optional)             - Build a package with only ARM Linux binaries\n";
 	print "    --ppc (optional)             - Build a package with only PPC Linux binaries\n";
+	print "    --encore (optional)          - Build a package for the Musical Fidelity Encore\n";
 	print "    --noCPAN (optional)          - Build a package with no CPAN modules included\n";
 	print "    --noCPAN-light (optional)    - Build a package with no CPAN modules, web templates etc. included\n";
 	print "\n";
 	print "--- Building a Docker image (with only ARM and x86_64 Linux binaries)\n";
-	print "    --build docker <required opts below>\n";
-	print "    --buildDir <dir>             - The directory to do temporary work in\n";
-	print "    --sourceDir <dir>            - The location of the source code repository\n";
-	print "                                   that you've checked out from Git\n";
-	print "    --releaseType <nightly/release>- Whether you're building a 'release' package, \n";
-	print "        (optional)                 or you're building a nightly-style package\n";
-	print "    --tag <tag>                  - additional tag for the Docker image\n";
+	print "    --build docker <required opts above>\n";
+	print "    --tag <tag>                  - additional comma separated tag(s) for the Docker image\n";
+	print "    --registry <registry>        - registry to push the image to (in addition to Dockerhub\n";
 	print "\n";
 	print "--- Building an RPM package\n";
-	print "    --build rpm <required opts below>\n";
-	print "    --buildDir <dir>             - The directory to do temporary work in\n";
-	print "    --sourceDir <dir>            - The location of the source code repository\n";
-	print "                                   that you've checked out from Git\n";
-	print "    --destDir <dir>              - The destination you'd like your files \n";
-	print "    --releaseType <nightly/release>- Whether you're building a 'release' package, \n";
-	print "        (optional)                 or you're building a nightly-style package\n";
+	print "    --build rpm <required opts above>\n";
 	print "\n";
 	print "--- Building a Debian Package\n";
-	print "    --build debian <required opts below>\n";
-	print "    --buildDir <dir>             - The directory to do temporary work in\n";
-	print "    --sourceDir <dir>            - The location of the source code repository\n";
-	print "                                   that you've checked out from Git\n";
-	print "    --destDir <dir>              - The destination you'd like your files \n";
-	print "    --releaseType <nightly/release>- Whether you're building a 'release' package, \n";
-	print "        (optional)                 or you're building a nightly-style package\n";
+	print "    --build debian <required opts above>\n";
 	print "    --fakeroot (optional)        - Whether to use fakeroot to run the build or not. \n";
 	print "    --arm (optional)             - Build a package with only ARM Linux binaries\n";
 	print "    --x86_64 (optional)          - Build a package with only x86_64 Linux binaries\n";
 	print "    --i386 (optional)            - Build a package with only i386 Linux binaries\n";
 	print "\n";
-	print "--- Building a Mac OSX Package\n";
-	print "    --build macosx <required opts below>\n";
-	print "    --buildDir <dir>             - The directory to do temporary work in\n";
-	print "    --sourceDir <dir>            - The location of the source code repository\n";
-	print "                                   that you've checked out from Git\n";
-	print "    --destDir <dir>              - The destination you'd like your files \n";
-	print "    --destName <filename>        - The name of the OSX Package Name, do not \n";
-	print "       (optional)                  include the .dmg\n";
+	print "--- Building a TCZ package for piCorePlayer\n";
+	print "    --build pcp <required opts above>\n";
 	print "\n";
-	print "--- Building a Windows Package\n";
-	print "    --build win32 <required opts below>\n";
-	print "    --buildDir <dir>             - The directory to do temporary work in\n";
-	print "    --sourceDir <dir>            - The location of the source code repository\n";
-	print "                                   that you've checked out from Git\n";
-	print "    --destDir <dir>              - The destination you'd like your files \n";
+	print "--- Building a macOS menu bar item\n";
+	print "    --build macos <required opts above>\n";
+	print "    --destName <filename>        - The name of the OSX Package Name, do not \n";
+	print "       (optional)                  include the extension.\n";
 }
 
 sub removeExclusions {
@@ -459,16 +488,55 @@ sub buildDockerImage {
 	system("cp $dockerDir/.dockerignore $dockerDir/* $workDir");
 
 	my @tags = ("$version");
-	$tag ||= "latest" if $releaseType eq "release";
-	push @tags, $tag if $tag;
+	$tag ||= "rc" if $releaseType eq "release";
 
-	my $tags = join(' ', map {
-		"--tag lmscommunity/logitechmediaserver:$_";
-	} @tags);
+	# Split the tag into multiple tags if commas are present
+	if ($tag) {
+		my @split_tags = split(/,/, $tag);
+		push @tags, @split_tags;
+	}
 
-	system("cd $workDir; docker buildx build --push --platform linux/arm/v7,linux/amd64,linux/arm64/v8 $tags .");
+	$registry = lc($registry) if $registry;
 
-	die('Docker build failed') if $? & 127;
+	my $tags;
+	foreach my $r ('lmscommunity', $registry) {
+		next unless $r;
+
+		my $tag = ' --tag ' . lc($r) . '/' . $defaultDestName;
+
+		foreach my $t (@tags) {
+			$tags .= "$tag:$t";
+		}
+	}
+
+	print "INFO: Building Docker image with tags:$tags\n";
+
+	system("cd $workDir; docker buildx build --push --platform linux/arm/v7,linux/amd64,linux/arm64/v8 $tags .") == 0
+		or die("Docker build failed: $!");
+}
+
+##############################################################################################
+## Build the TCZ package for piCorePlayer                                                   ##
+##############################################################################################
+sub buildPCP {
+	removeExclusions($dirsToExcludeForPCP);
+
+	mkpath("$buildDir/build/usr/local/bin");
+	mkpath("$buildDir/build/usr/local/etc/init.d");
+
+	system("mv $buildDir/server $buildDir/build/usr/local/slimserver");
+	copy("$buildDir/platforms/pcp/slimserver", "$buildDir/build/usr/local/etc/init.d");
+	copy("$buildDir/platforms/pcp/lms-update.sh", "$buildDir/build/usr/local/bin");
+
+	system("find $buildDir/build -type f -perm 644");
+	system("find $buildDir/build -type d -perm 755");
+	system("find $buildDir/build/usr/local/slimserver -name '*.pl' -perm 755");
+	chmod 0755, "$buildDir/build/usr/local/etc/init.d/slimserver";
+	chmod 0755, "$buildDir/build/usr/local/bin/lms-update.sh";
+	system("find $buildDir/build/usr/local/slimserver/Bin -type f -perm 755");
+
+	print "INFO: Building TCZ package with source from $buildDir/build...\n";
+	system("mksquashfs $buildDir/build $destDir/$destName.tcz -noappend -force-uid 0 -force-gid 50 -b 16384");
 }
 
 ##############################################################################################
@@ -556,12 +624,13 @@ sub buildRPM {
 	system("mv $buildDir/$defaultDestName.tgz $buildDir/rpm/SOURCES");
 
 	## Copy the various SPEC< Config, etc files into the right dirs...
-        copy("$buildDir/platforms/redhat/squeezeboxserver.config", "$buildDir/rpm/SOURCES");
-        copy("$buildDir/platforms/redhat/squeezeboxserver.init", "$buildDir/rpm/SOURCES");
-        copy("$buildDir/platforms/redhat/squeezeboxserver.logrotate", "$buildDir/rpm/SOURCES");
-        copy("$buildDir/platforms/redhat/squeezeboxserver.service", "$buildDir/rpm/SOURCES");
+        copy("$buildDir/platforms/redhat/lyrionmusicserver.config", "$buildDir/rpm/SOURCES");
+        copy("$buildDir/platforms/redhat/lyrionmusicserver.init", "$buildDir/rpm/SOURCES");
+        copy("$buildDir/platforms/redhat/lyrionmusicserver.logrotate", "$buildDir/rpm/SOURCES");
+        copy("$buildDir/platforms/redhat/lyrionmusicserver.service", "$buildDir/rpm/SOURCES");
         copy("$buildDir/platforms/redhat/README.systemd", "$buildDir/rpm/SOURCES");
-        copy("$buildDir/platforms/redhat/squeezeboxserver.spec", "$buildDir/rpm/SPECS");
+        copy("$buildDir/platforms/redhat/README.rebranding", "$buildDir/rpm/SOURCES");
+        copy("$buildDir/platforms/redhat/lyrionmusicserver.spec", "$buildDir/rpm/SPECS");
 
 	## Just check, if this is a 'nightly' build, pass on 'trunk' to the rpmbuild command
 	if ($releaseType eq "nightly") {
@@ -570,7 +639,7 @@ sub buildRPM {
 
         # Do it
         my $date = strftime('%Y-%m-%d', localtime());
-        print `rpmbuild -bb --with $releaseType --define="src_basename $defaultDestName" --define="_version $version" --define="_src_date $date" --define="_revision $revision" --define='_topdir $buildDir/rpm' $buildDir/rpm/SPECS/squeezeboxserver.spec`;
+        print `rpmbuild -bb --with $releaseType --define="src_basename $defaultDestName" --define="_version $version" --define="_src_date $date" --define="_revision $revision" --define='_topdir $buildDir/rpm' $buildDir/rpm/SPECS/lyrionmusicserver.spec`;
 
 	## Just move the file out of the building directory, and put it into the destDir
 	print "INFO: Moving $buildDir/rpm/RPMS/noarch/*.rpm to $destDir\n";
@@ -630,9 +699,9 @@ sub buildDebian {
 
 	## Ok, we've set everything up... lets run the dpkg-buildpkg command...
 	if ($fakeRoot) {
-		print `cd $buildDir/platforms; fakeroot dpkg-buildpackage -b -d ;`;
+		print `cd $buildDir/platforms; fakeroot dpkg-buildpackage -b -d -Zxz ;`;
 	} else {
-		print `cd $buildDir/platforms; dpkg-buildpackage -b -d ;`;
+		print `cd $buildDir/platforms; dpkg-buildpackage -b -d -Zxz ;`;
 	}
 
 	if ($suffix) {
@@ -649,289 +718,129 @@ sub buildDebian {
 
 
 ##############################################################################################
-## Build the Mac OSX Installer Package
+## Build the macOS package
 ##############################################################################################
-sub buildMacOSX {
+sub buildMacOS {
 	## Grab the variables passed to us...
-	if ( ($_[0] ) || die("Problem: Not all of the variables were passed to the buildMacOSX function...") ) {
-		## Take the filename passed to us and make sure that we build the DMG with
+	if ( ($_[0] ) || die("Problem: Not all of the variables were passed to the buildMacOS function...") ) {
+		## Take the filename passed to us and make sure that we build the PKG with
 		## that name, and that the 'pretty mounted name' also matches
 		my $pkgName = $_[0];
 
-		print "INFO: Building package for Mac OSX (Universal)... \n";
+		print "INFO: Building package for macOS (Universal)... \n";
 
 		## First, lets make sure we get rid of the files we don't need for this install
-		my @dirsToExclude = split(/ /, $dirsToExcludeForMacOSX);
-		my $n = 0;
-		while ($dirsToExclude[$n]) {
-			print "INFO: Removing $dirsToExclude[$n] files from buildDir...\n";
-			system("find $buildDir | grep -i $dirsToExclude[$n] | xargs rm -rf ");
-			$n++;
+		foreach (split(/ /, $dirsToExcludeForMacOS)) {
+			print "INFO: Removing $_ files from buildDir...\n";
+			system("find $buildDir | grep -i $_ | xargs rm -rf ");
 		}
-
-		## Now, lets make the Install Files directory
-		print "INFO: Making $buildDir/$pkgName/Install Files...\n";
-		mkpath("$buildDir/$pkgName/Install Files");
+		system("rm -f $destDir/*.dmg");
 
 		## Copy in the documentation and license files..
 		print "INFO: Copying documentation & licenses...\n";
 		copy("$buildDir/server/license.txt", "$buildDir/$pkgName/License.txt");
 
-		## Set some xcodebuild paths...
-		my $xcodeBuildDir = "$buildDir/platforms/osx/Preference Pane/build/Deployment";
-		my $prefPaneDir = "$buildDir/$pkgName/Install Files/Squeezebox.prefPane";
-		my $contentsDir = "$prefPaneDir/Contents";
+		system("cd \"$buildDir\"; mkdir perl; cd perl; tar xjf \"$buildDir/platforms/osx/Perl-5.34.0-x86_64-arm64.tar.bz2\"; chmod a+x bin/perl");
 
-		## Lets build the pref pane and installer...
-		print "INFO: Beginning PreferencePane and Installer build...\n";
-		system("cd \"$buildDir/platforms/osx/Preference Pane\"; xcodebuild -project \"SqueezeCenter.xcodeproj\" -target \"Squeezebox\" -configuration Deployment");
+		my $realName = $pkgName;
+		$realName =~ s/-.*//;
+		$realName =~ s/(.)([A-Z])/$1 $2/g;
+		print "INFO: Building $realName.app with source from $buildDir/$pkgName...\n";
 
-		print "INFO: Copying Preference Pane...\n";
-		system("ditto \"$xcodeBuildDir/Squeezebox.prefPane\" \"$prefPaneDir\"");
-
-		system("mv \"$buildDir/server\" \"$contentsDir/\" ");
-		system("cd \"$contentsDir\"; mkdir perl; cd perl; tar xjf \"$buildDir/platforms/osx/Perl-5.34.0-x86_64-arm64.tar.bz2\"; chmod a+x bin/perl");
-
-		print "INFO: Create installer package $pkgName...\n";
-		system("/Developer/usr/bin/packagemaker --verbose --root-volume-only --root \"$prefPaneDir\" --scripts \"$buildDir/platforms/osx/Installer/scripts\" --out \"$destDir/$pkgName.pkg\" --target 10.5 --domain system --id com.logitech.music.Squeezebox --version 1.0 --resources \"$buildDir/platforms/osx/Installer/l10n\" --title \"Logitech Media Server\"");
-
-		# add localized resource files to the package
-		print "\nINFO: Add localized resource files to package...\n";
-
-		rmtree("$buildDir/lms_tmp");
-
-		# we need to manually modify the Distribution file in the package to make it recognize the localizations - known bug in packagemaker
-		system("pkgutil --expand \"$destDir/$pkgName.pkg\" $buildDir/lms_tmp");
-
-		require File::Slurp;
-
-		my $distributionXML = File::Slurp::read_file("$buildDir/lms_tmp/Distribution");
-		$distributionXML =~ s/(<\/title>)/$1\n<welcome file="Welcome"\/>\n<background file="background" alignment="topleft" scaling="none"\/>/;
-		$distributionXML =~ s/(<choice) /$1 customLocation="\/Library\/PreferencePanes" /;
-		File::Slurp::write_file("$buildDir/lms_tmp/Distribution", $distributionXML);
-
-		opendir my ($dirh), "$buildDir/lms_tmp/Resources/";
-
-		# copy the background image in each localization's folder
-		for ( readdir $dirh ) {
-			my $f = "$buildDir/lms_tmp/Resources/$_";
-			if ( $f =~ /\.lproj$/i && -d $f ) {
-				copy("$buildDir/platforms/osx/Installer/installer_osx.png", "$f/background");
-			}
-		}
-
-		closedir $dirh;
-
-		system("pkgutil --flatten $buildDir/lms_tmp \"$destDir/$pkgName-unsigned.pkg\"");
-
-		if ($releaseType eq 'release') {
-			unlink("$destDir/$pkgName.pkg");
-		}
-		else {
-			move("$destDir/$pkgName-unsigned.pkg", "$destDir/$pkgName.pkg");
-		}
-	}
-}
-
-##############################################################################################
-## Build the Windows32 Installer
-##############################################################################################
-sub buildWin32 {
-	## Grab the variables passed to us...
-	if ( ($_[0] ) || die("Problem: Not all of the variables were passed to the BuildWin32 function...") ) {
-		## Take the filename passed to us and make sure that we build the DMG with
-		## that name, and that the 'pretty mounted name' also matches
-		my $destFileName = $_[0];
-
-		if ( $releaseType && $releaseType eq "release" ) {
-			$destFileName =~ s/-$revision//;
-		}
-
-		print "INFO: Building Win32 Installer Package...\n";
-
-		## First, lets make sure we get rid of the files we don't need for this install
-		my @dirsToExclude = split(/ /, $dirsToExcludeForWin32);
-		my $n = 0;
-		while ($dirsToExclude[$n]) {
-			print "INFO: Removing $dirsToExclude[$n] files from buildDir...\n";
-			system("find $buildDir | grep -i $dirsToExclude[$n] | xargs rm -rf ");
-			$n++;
-		}
-
-		print "INFO: Creating $buildDir/build for the final packaging...\n";
-		mkpath("$buildDir/build");
-
-		print "INFO: Copying server directory to $buildDir/build...\n";
-		system("cp -R $buildDir/server \"$buildDir/build/server\" ");
-
-		print "INFO: Copying various documents to $buildDir/build...\n";
-		copy("$buildDir/server/CHANGELOG.html", "$buildDir/build/Release Notes.html");
-		copy("$buildDir/server/license.txt", "$buildDir/build/License.txt");
-
-		# This used to copy Wx code into the system Perl dir, this shouldn't be done in a build script
-		#print "INFO: Copying additional perl modules to $windowsPerlDir\\site...\n";
-		#system("cp -R $buildDir/platforms/win32/lib/perl5/* \"$windowsPerlDir/site\" ");
-
-		my $rev = int(($revision || getRevisionForRepo() || $version) / 3600) % 65536;
-		my @versionInfo = (
-			"CompanyName=Logitech Inc.",
-			"FileVersion=$rev",
-			"LegalCopyright=Copyright 2001-2020 Logitech Inc.",
-			"ProductVersion=$version",
-			"ProductName=Logitech Media Server",
+		# prepare the launcher app
+		my @args = (
+			'--name', 'Lyrion Music Server',
+			'--interface-type', 'None',
+			'--author', 'Lyrion Community, Michael Herger',
+			'--app-version', $version,
+			'--app-icon', "$buildDir/platforms/osx/MenuBarItem/icon.icns",
+			'--quit-after-execution',
+			'--overwrite',
+			"$buildDir/platforms/osx/MenuBarItem/LauncherHelper.sh",
+			"$destDir/$realName.app"
 		);
 
+		system("rm -rf '$destDir/$realName.app'");
+		system('platypus', @args);
 
-		print "INFO: Building SqueezeTray executable...\n";
+		@args = (
+			'--name', 'Lyrion Music Server',
+			'--interface-type', 'Status Menu',
+			'--author', 'Lyrion Community, Michael Herger',
+			'--app-version', $version,
+			'--app-icon', "$buildDir/platforms/osx/MenuBarItem/icon.icns",
+			'--status-item-kind', 'Icon',
+			'--status-item-icon', "$buildDir/platforms/osx/MenuBarItem/iconTemplate.icns",
+			'--status-item-template-icon',
+			'--status-item-sysfont',
+			'--interpreter', '../MacOS/perl',
+			'--background',
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/LMSMenuAction.pm",
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/LMSMenu.json",
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/start-server.sh",
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/stop-server.sh",
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/create-launchitem.sh",
+			'--bundled-file', "$buildDir/platforms/osx/MenuBarItem/remove-launchitem.sh",
+			'--bundled-file', "$buildDir/server",
+			'--overwrite',
+			"$buildDir/platforms/osx/MenuBarItem/LMSMenu.pl",
+			"$buildDir/$pkgName"
+		);
 
-		my $programInfo = join(';', @versionInfo, (
-			"FileDescription=Logitech Media Server Tray Icon",
-			"OriginalFilename=SqueezeTray",
-			"InternalName=SqueezeTray",
-		));
+		system('platypus', @args);
 
-		system("cd $buildDir/platforms/win32; perltray --perl \"$windowsPerlPath\" --info \"$programInfo\" SqueezeTray.perltray");
-		move("$buildDir/platforms/win32/SqueezeTray.exe", "$buildDir/build/SqueezeTray.exe");
-		copy("$buildDir/platforms/win32/strings.txt", "$buildDir/build/strings.txt");
+		# binaries have to live in the MacOS folder, or notarization will fail!
+		# https://developer.apple.com/documentation/bundleresources/placing_content_in_a_bundle
+		# https://developer.apple.com/documentation/xcode/embedding-nonstandard-code-structures-in-a-bundle
+		move("$buildDir/perl/bin/perl", "$buildDir/$pkgName.app/Contents/MacOS/perl");
+		system("cp -R '$buildDir/perl/lib' '$buildDir/$pkgName.app/Contents/'");
+		system("cd '$buildDir/$pkgName.app/Contents/Resources/server/Bin/darwin' && rm -f mac; mv * '$buildDir/$pkgName.app/Contents/MacOS'");
 
-		print "INFO: Building Logitech Media Server Service Helper executable...\n";
+		# copy the menu bar item inside the launcher
+		system("cd $buildDir && mv '$pkgName.app' '$destDir/$realName.app/Contents/MacOS/$realName.app'");
 
-
-		$programInfo = join(';', @versionInfo, (
-			"FileDescription=Logitech Media Server Service Helper",
-			"OriginalFilename=squeezesvc",
-			"InternalName=squeezesvc",
-		));
-
-		system("cd $buildDir/platforms/win32; perlapp --perl \"$windowsPerlPath\" --info \"$programInfo\" --clean --bind=grant.exe[file=../../server/Bin/MSWin32-x86-multi-thread/grant.exe,mode=666] --force squeezesvc.pl");
-		move("$buildDir/platforms/win32/squeezesvc.exe", "$buildDir/build/server/squeezesvc.exe");
-
-
-		print "INFO: Building Logitech Media Server executable for server...\n";
-
-		$programInfo = join(';', @versionInfo, (
-			"FileDescription=Logitech Media Server",
-			"OriginalFilename=SqueezeboxServer",
-			"InternalName=SqueezeboxServer",
-		));
-
-		system("cd $buildDir/server; perlsvc --perl \"$windowsPerlPath\" --info \"$programInfo\" --verbose ../platforms/win32/squeezecenter.perlsvc");
-		move("$buildDir/server/slimserver.exe", "$buildDir/build/server/SqueezeSvr.exe");
-
-
-		print "Making scanner executable...\n";
-
-		$programInfo = join(';', @versionInfo, (
-			"FileDescription=Logitech Media Server Scanner",
-			"OriginalFilename=Scanner",
-			"InternalName=Scanner",
-		));
-
-		system("cd $buildDir/server; perlapp --perl \"$windowsPerlPath\" --info \"$programInfo\" ../platforms/win32/scanner.perlapp");
-		move("$buildDir/server/scanner.exe", "$buildDir/build/server/scanner.exe");
-
-
-		print "Making control panel executable...\n";
-
-		$programInfo = join(';', @versionInfo, (
-			"FileDescription=Logitech Media Server Control Panel",
-			"OriginalFilename=Cleanup",
-			"InternalName=Cleanup",
-		));
-
-		system("cd $buildDir/server; perlapp --perl \"$windowsPerlPath\" --info \"$programInfo\" ../platforms/win32/cleanup.perlapp");
-		move("$buildDir/server/cleanup.exe", "$buildDir/build/server/squeezeboxcp.exe");
-
-
-		print "INFO: Removing files we don't want to have in the binary distribution...\n";
-		rmtree("$buildDir/build/server/CPAN");
-		rmtree("$buildDir/build/server/lib");
-
-		foreach (qw(Buttons Control Display Formats GUI Hardware Media Menu Music Networking Player Schema Utils Web)) {
-			rmtree("$buildDir/build/server/Slim/$_");
+		# see whether we have certificates to sign the binaries
+		# "$ENV{HOME}/Library/Developer/Xcode/UserData/Provisioning\ Profiles/build_pp.provisionprofile";
+		my $hasCerts;
+		if ( $ENV{BUILD_CERTIFICATE_BASE64} && $ENV{DEV_CERT_NAME} ) {
+			$hasCerts = 1;
+			print "INFO: Signing $realName.app...\n";
+			# we must --force the signature to replace existing signatures
+			# the menu bar item is inside the launcher, so we need to sign it twice
+			system("cd '$destDir/$realName.app/Contents/MacOS/$realName.app/Contents/MacOS/'; ls | grep -v Server | xargs codesign -s \"$ENV{DEV_CERT_NAME}\" -o runtime --force ");
+			system("cd '$destDir/$realName.app/Contents/MacOS/'; codesign -s \"$ENV{DEV_CERT_NAME}\" -o runtime '$realName.app'");
+			system("codesign -v -s \"$ENV{DEV_CERT_NAME}\" -o runtime '$destDir/$realName.app'");
 		}
 
-		unlink("$buildDir/build/server/Slim/Plugin/Base.pm");
-		unlink("$buildDir/build/server/Slim/Plugin/OPMLBased.pm");
-		unlink("$buildDir/build/server/Slim/bootstrap.pm");
-		unlink("$buildDir/build/server/Slim/Formats.pm");
-		unlink("$buildDir/build/server/Slim/Schema.pm");
-		unlink("$buildDir/build/server/cleanup.pl");
-		unlink("$buildDir/build/server/slimserver.pl");
-		unlink("$buildDir/build/server/slimservice.pl");
-		unlink("$buildDir/build/server/scanner.pl");
-		rmtree("$buildDir/build/server/t");
+		# if we have NodeJS installed, try to create a DMG file - see https://github.com/sindresorhus/create-dmg
+		if (`which npx`) {
+			print "INFO: Building $pkgName.dmg using $realName.app...\n";
+			# system("cd $destDir; npx --yes create-dmg --overwrite '$realName.app'; mv -f L*.dmg '$pkgName.dmg'");
+			system("cd $buildDir/platforms/osx/MenuBarItem && cp *png *webloc icon.icns app.json $destDir/");
 
-		print "INFO: Making installer...\n";
+			# add signing information if available
+			if ($hasCerts) {
+				system("sed -e 's/_SIGNING_IDENTITY_/$ENV{DEV_CERT_NAME}/' $buildDir/platforms/osx/MenuBarItem/app.json > $destDir/app.json");
+			}
+			else {
+				system("grep -v _SIGNING_IDENTITY_ $buildDir/platforms/osx/MenuBarItem/app.json > $destDir/app.json");
+			}
 
-		copy("$buildDir/platforms/win32/installer/ServiceManager.iss", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/SocketTest.iss", "$buildDir/build") || die ($!);
-		copy("$buildDir/platforms/win32/installer/strings.iss", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/psvince.dll", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/sockettest.dll", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/ApplicationData.xml", "$buildDir/build");
-		copy("$buildDir/platforms/win32/lib/vcredist.exe", "$buildDir/build");
+			system("cd $destDir; npx --yes appdmg\@0.6.6 app.json LMS.dmg; mv -f LMS.dmg '$pkgName.dmg'");
+			system("cd $destDir; rm -rf *.png icon.icns app.json *webloc L*.app");
 
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Danish.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Dutch.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Default.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Finnish.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/French.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/German.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Hebrew.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Italian.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Norwegian.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Spanish.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Czech.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Polish.isl", "$buildDir/build");
-		copy("$buildDir/platforms/win32/InnoSetup/Languages/Russian.isl", "$buildDir/build");
-		# Swedish is 3rd party - we keep it in our installer folder
-		copy("$buildDir/platforms/win32/installer/Swedish.isl", "$buildDir/build");
-
-		copy("$buildDir/platforms/win32/installer/logi.bmp", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/logitech.bmp", "$buildDir/build");
-		copy("$buildDir/platforms/win32/installer/squeezebox.bmp", "$buildDir/build");
-
-		# replacing build number in installer script
-		system("sed -e \"s/VersionInfoVersion=0.0.0.0/VersionInfoVersion=$rev/\" \"$buildDir/platforms/win32/installer/SqueezeCenter.iss\" > \"$buildDir/build/SqueezeCenter.iss\"");
-		system("cd $buildDir/build; \"$buildDir/platforms/win32/InnoSetup/ISCC.exe\" \/Q SqueezeCenter.iss ");
-
-		unlink("$buildDir/build/SqueezeCenter.iss");
-		unlink("$buildDir/build/ServiceManager.iss");
-		unlink("$buildDir/build/SocketTest.iss");
-		unlink("$buildDir/build/StartupModeWizardPage.iss");
-		unlink("$buildDir/build/ServiceEnabler.iss");
-
-		unlink("$buildDir/build/psvince.dll");
-		unlink("$buildDir/build/sockettest.dll");
-		unlink("$buildDir/build/ApplicationData.xml");
-		unlink("$buildDir/build/logi.bmp");
-		unlink("$buildDir/build/logitech.bmp");
-		unlink("$buildDir/build/strings.iss");
-
-		unlink("$buildDir/build/Danish.isl");
-		unlink("$buildDir/build/Default.isl");
-		unlink("$buildDir/build/Dutch.isl");
-		unlink("$buildDir/build/English.isl");
-		unlink("$buildDir/build/Finnish.isl");
-		unlink("$buildDir/build/French.isl");
-		unlink("$buildDir/build/German.isl");
-		unlink("$buildDir/build/Hebrew.isl");
-		unlink("$buildDir/build/Norwegian.isl");
-		unlink("$buildDir/build/Italian.isl");
-		unlink("$buildDir/build/Spanish.isl");
-		unlink("$buildDir/build/Swedish.isl");
-		unlink("$buildDir/build/Czech.isl");
-		unlink("$buildDir/build/Polish.isl");
-		unlink("$buildDir/build/Russian.isl");
-
-		print "INFO: Everything is finally ready, renaming the .exe and zip files...\n";
-		print "INFO: Moving [$buildDir/build/Output/SqueezeSetup.exe] to [$destDir/$destFileName.exe]\n";
-		move("$buildDir/build/Output/SqueezeSetup.exe", "$destDir/$destFileName.exe");
-
-		rmtree("$buildDir/build/Output");
+			if ($hasCerts) {
+				print "INFO: Notarizing $pkgName.dmg...";
+				system("xcrun notarytool submit '$destDir/$pkgName.dmg' --progress --apple-id=$ENV{APPLE_ID} --password=$ENV{NOTARIZATION_PW} --team-id=$ENV{TEAM_ID} --wait");
+				system("xcrun stapler staple '$destDir/$pkgName.dmg'");
+			}
+		}
+		else {
+			print "INFO: we're missing the necessary tools to build the DMG package.";
+		}
 	}
 }
+
 
 ##############################################################################################
 ## Build the Windows64 Installer
@@ -978,20 +887,23 @@ sub buildWin64 {
 		copy("$buildDir/platforms/win32/installer/sockettest.dll", "$buildDir/build");
 		copy("$buildDir/platforms/win32/installer/ApplicationData.xml", "$buildDir/build");
 		copy("$buildDir/platforms/win32/installer/instsvc.pl", "$buildDir/build");
+		copy("$buildDir/platforms/win32/installer/7z.exe", "$buildDir/build");
+		copy("$buildDir/platforms/win32/installer/7z.dll", "$buildDir/build");
 		copy("$buildDir/platforms/win32/res/SqueezeCenter.ico", "$buildDir/build");
 		copy("$buildDir/platforms/win32/res/SqueezeCenterOff.ico", "$buildDir/build");
-		copy("$buildDir/server/Bin/MSWin32-x86-multi-thread/grant.exe", "$buildDir/build");
+		copy("$buildDir/server/Bin/MSWin32-x64-multi-thread/grant.exe", "$buildDir/build");
 
 		# Swedish is 3rd party - we keep it in our installer folder
 		copy("$buildDir/platforms/win32/installer/Swedish.isl", "$buildDir/build");
 
-		copy("$buildDir/platforms/win32/installer/logi.bmp", "$buildDir/build");
+		copy("$buildDir/platforms/win32/installer/logo.bmp", "$buildDir/build");
 		copy("$buildDir/platforms/win32/installer/squeezebox.bmp", "$buildDir/build");
 
 		# replacing build number in installer script
 		system("sed -e \"s/VersionInfoVersion=0.0.0.0/VersionInfoVersion=$rev/\" \"$buildDir/platforms/win32/installer/SqueezeCenterX64.iss\" > \"$buildDir/build/SqueezeCenter.iss\"");
-		system("cd $buildDir/build; \"$buildDir/platforms/win32/InnoSetup/ISCC.exe\" \/Q ServiceEnabler.iss ");
-		system("cd $buildDir/build; \"$buildDir/platforms/win32/InnoSetup/ISCC.exe\" \/Q SqueezeCenter.iss ");
+		# don't use slashes (eg. /Q) in parameters - it confused bash on Github
+		system("cd $buildDir/build; \"$buildDir/platforms/win32/InnoSetup/ISCC.exe\" -Q ServiceEnabler.iss");
+		system("cd $buildDir/build; \"$buildDir/platforms/win32/InnoSetup/ISCC.exe\" -Q SqueezeCenter.iss");
 
 		print "INFO: Everything is finally ready, renaming the .exe and zip files...\n";
 		print "INFO: Moving [$buildDir/build/Output/SqueezeSetup.exe] to [$destDir/$destFileName.exe]\n";

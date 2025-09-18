@@ -2,12 +2,12 @@
 #define LMSPerlBin  "Perl\perl\bin\perl.exe"
 
 [Setup]
-AppName=Logitech Media Server Service Enabler
-AppVerName=Logitech Media Server
+AppName=Lyrion Music Server Service Enabler
+AppVerName=Lyrion Music Server
 OutputBaseFilename=SqzSvcMgr
 WizardImageFile=squeezebox.bmp
-WizardSmallImageFile=logi.bmp
-DefaultDirName="{commonpf64}\Squeezebox"
+WizardSmallImageFile=logo.bmp
+DefaultDirName="{commonpf64}\Lyrion"
 SolidCompression=yes
 DisableDirPage=yes
 DisableFinishedPage=yes
@@ -16,7 +16,7 @@ DisableReadyMemo=yes
 DisableReadyPage=yes
 DisableStartupPrompt=yes
 ShowLanguageDialog=no
-SetupIconFile=SqueezeCenterOff.ico
+SetupIconFile=SqueezeCenter.ico
 Uninstallable=no
 
 [Files]
@@ -40,7 +40,8 @@ Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "sv"; MessagesFile: "Swedish.isl"
 
 [Run]
-Filename: "sc"; Parameters: "failure {#ServiceName} reset= 180 actions= restart/1000/restart/1000/restart/1000"; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "failure {#ServiceName} reset= 180 actions= restart/1000/restart/1000/restart/1000"; Flags: runhidden
+Filename: {sys}\sc.exe; Parameters: "config {#ServiceName} start= delayed-auto"; Flags: runhidden
 
 [CustomMessages]
 #include "strings.iss"
@@ -73,10 +74,10 @@ end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
-	if not FileExists(ExpandConstant('{app}\{#LMSPerlBin}')) then
+	if not FileExists(ExpandConstant('{src}\{#LMSPerlBin}')) and not FileExists(ExpandConstant('{app}\{#LMSPerlBin}')) then
 	begin
-		Log('{cm:ServiceEnablerNeedsLMS}');
-		Result := '{cm:ServiceEnablerNeedsLMS}';
+		Log(ExpandConstant('{cm:ServiceEnablerNeedsLMS}'));
+		Result := ExpandConstant('{cm:ServiceEnablerNeedsLMS}');
 	end;
 end;
 
