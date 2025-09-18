@@ -23,6 +23,8 @@ if [ ! -d $PREFIX/var/lib/proot-distro/installed-rootfs/$distro ]; then
   apt upgrade -y -o Dpkg::Options::="--force-confnew"
   apt install -y -o Dpkg::Options::="--force-confnew" proot proot-distro wget squeezelite || pkg --check-mirror install -y -o Dpkg::Options::="--force-confnew" proot proot-distro wget squeezelite tree
   termux-setup-storage
+  mv $PREFIX/etc/proot-distro/debian.sh $PREFIX/etc/proot-distro/trixie.sh
+  curl https://raw.githubusercontent.com/termux/proot-distro/0c77e30b3000cabcc11b82843ffc4426070aec17/distro-plugins/debian.sh -o $PREFIX/etc/proot-distro/debian.sh
   proot-distro install $distro
   mv $PREFIX/tmp/sources.list.original $PREFIX/etc/apt/sources.list
 fi
