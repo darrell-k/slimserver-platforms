@@ -65,7 +65,7 @@ if [  ! -d '/var/lib/squeezeboxserver/cache/InstalledPlugins/Plugins/MaterialSki
 fi
 
 sed -i 's/SLIMUSER.*/SLIMUSER=root/' /etc/default/\$package
-sed -i 's/.*logger.*/\$@ \&/' /sbin/squeezeboxserver_safe
+sed -i 's/1> >(logger)/> \/dev\/null/' /sbin/squeezeboxserver_safe
 
 if [ ! -f /usr/share/perl5/Slim/Utils/OS/Custom.pm ]; then
   cat << 'EOF2' > /usr/share/perl5/Slim/Utils/OS/Custom.pm
@@ -159,7 +159,7 @@ if [ -z "\$error" ]; then
       if [ -z "\$error" ]; then
         echo \$package > /root/lmspackage
         sed -i 's/SLIMUSER.*/SLIMUSER=root/' /etc/default/\$package
-        sed -i 's/.*logger.*/\$@ \&/' /sbin/squeezeboxserver_safe
+        sed -i 's/1> >(logger)/> \/dev\/null/' /sbin/squeezeboxserver_safe
       fi
     fi
   fi
