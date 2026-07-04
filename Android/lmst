@@ -1,9 +1,9 @@
 #!/bin/bash
 
 if [ $PREFIX/var/lib/lms/${0##*/} != $0 ]; then
-  mkdir $PREFIX/var/lib/lms
+  mkdir -p $PREFIX/var/lib/lms
   mv ${0##*/} $PREFIX/var/lib/lms/${0##*/}
-  rm ~/extensions.xml ~/installlms ~/logitechmediaserver*.deb ~/servers.json ~/updatelms
+  rm -f ~/extensions.xml ~/installlms ~/logitechmediaserver*.deb ~/servers.json ~/updatelms
   echo "Moved LMS script to $PREFIX/var/lib/lms"
   exec bash $PREFIX/var/lib/lms/${0##*/} $*
 fi
@@ -33,29 +33,30 @@ if [ $(grep -c "allow-external-apps=true" ~/.termux/termux.properties) -eq 0 ]; 
   echo "allow-external-apps=true" >> ~/.termux/termux.properties
 fi
 
-rm installlms
-rm .lmsinstalled
-rm .materialinstalled
+rm -f installlms
+rm -f .lmsinstalled
+rm -f .materialinstalled
 
 cat <<EOF > $PREFIX/var/lib/lms/installlms
 #!/bin/bash
 apt update
-apt -y -o Dpkg::Options::="--force-confnew" upgrade
-apt -y -o Dpkg::Options::="--force-confnew" install bash-completion jq apt-utils whiptail nano wget tree libxml2-utils
-rm servers.json
+apt -y -q -o Dpkg::Options::="--force-confnew" upgrade
+apt -y -qq -o Dpkg::Options::="--force-confnew" install apt-utils
+apt -y -qq -o Dpkg::Options::="--force-confnew" install bash-completion jq whiptail nano wget tree libxml2-utils
+rm -f servers.json
 wget https://lyrion.org/lms-server-repository/servers.json
 url=\$(jq -r '.latest.deb.url' servers.json)
 deb=\${url##*/}
 package=\$(echo \$deb | cut -d'_' -f1)
 if [  ! -d '/usr/share/squeezeboxserver' ]; then
-  rm logitechmediaserver*.deb lyrionmusicserver*.deb
+  rm -f logitechmediaserver*.deb lyrionmusicserver*.deb
   wget \$url
   apt -y -o Dpkg::Options::="--force-confnew" install ./\$deb
   touch .lmsfirstinstall
   echo \$package > /root/lmspackage
 fi
 if [  ! -d '/var/lib/squeezeboxserver/cache/InstalledPlugins/Plugins/MaterialSkin' ]; then
-  rm extensions.xml
+  rm -f extensions.xml
   wget https://lms-community.github.io/lms-plugin-repository/extensions.xml -O extensions.xml
   mkdir -p /var/lib/squeezeboxserver/cache/InstalledPlugins/Plugins/MaterialSkin
   wget \$(xmllint --xpath 'string(//extensions/plugins/plugin[@name="MaterialSkin"]/@url)' extensions.xml) -O MaterialSkin.zip
@@ -117,8 +118,8 @@ EOF
 
 cat <<EOF > $PREFIX/var/lib/lms/updatelms
 #!/bin/bash
-rm logitechmediaserver*.deb lyrionmusicserver*.deb
-rm servers.json
+rm -f logitechmediaserver*.deb lyrionmusicserver*.deb
+rm -f servers.json
 error=""
 wget https://lyrion.org/lms-server-repository/servers.json || error="ERROR: Can't get latest server details"
 if [ -z "\$error" ]; then
@@ -297,11 +298,11 @@ chmod +x ~/.shortcuts/Advanced/"Rerun LMS Setup"
 echo   "======================="
 if [ -e $PREFIX/var/lib/lms/.lmsfirstinstall ]; then
   echo "LMS installed"
-  rm $PREFIX/var/lib/lms/.lmsfirstinstall
+  rm -f $PREFIX/var/lib/lms/.lmsfirstinstall
 fi
 if [ -e $PREFIX/var/lib/lms/.materialfirstinstall ]; then
   echo "Material Skin Installed"
-  rm $PREFIX/var/lib/lms/.materialfirstinstall
+  rm -f $PREFIX/var/lib/lms/.materialfirstinstall
 fi
 echo "Scripts updated"
 echo   "======================="
